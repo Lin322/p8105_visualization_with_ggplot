@@ -56,6 +56,7 @@ weather_df %>%
   count(month, name, name = "n_obs")
 ```
 ```{r}
+#n()
 #n_distinct
 
 weather_df %>%
@@ -63,5 +64,36 @@ weather_df %>%
   summarize(
     n_obs = n(),
     n_days = n_distinct(date))
+```
+
+# 2x2 table
+
+## create a tidy table
+```{r}
+# case_when
+
+weather_df %>% 
+  mutate(
+    cold = case_when(
+      tmax <  5 ~ "cold",
+      tmax >= 5 ~ "not_cold",
+      TRUE      ~ ""
+  )) %>% 
+  filter(name != "Waikiki_HA") %>% 
+  group_by(name, cold) %>% 
+  summarize(count = n())
+```
+
+
+## create a 2x2 table
+```{r}
+weather_df %>% 
+  mutate(cold = case_when(
+    tmax <  5 ~ "cold",
+    tmax >= 5 ~ "not_cold",
+    TRUE     ~ ""
+  )) %>% 
+  filter(name != "Waikiki_HA") %>% 
+  janitor::tabyl(name, cold)
 ```
 
